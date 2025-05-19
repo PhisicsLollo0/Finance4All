@@ -45,7 +45,7 @@ def plot_percentage_returns(data, start_date=None, end_date=None):
     plt.tight_layout()
     plt.show()
 
-def plot_annualized_returns(results, plot_figure=True):
+def plot_annualized_returns(results, years=None, plot_figure=True):
     """
     Plots the annualized returns of indices over time.
     
@@ -68,7 +68,7 @@ def plot_annualized_returns(results, plot_figure=True):
 
     plt.xlabel("Date")
     plt.ylabel("Annualized Return (%)")
-    plt.title("Annualized Returns of Indices Over Time", fontsize=16, fontweight='bold')
+    plt.title(f"Annualized Returns of {years} years rolling windows", fontsize=16, fontweight='bold')
 
     plt.legend(loc="upper left", fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.6)
