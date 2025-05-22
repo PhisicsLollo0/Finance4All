@@ -79,3 +79,36 @@ def plot_annualized_returns(results, years=None, plot_figure=True):
     ax.xaxis.set_major_formatter(DateFormatter('%Y'))
 
     plt.tight_layout()
+
+def plot_max_drawdown(results, plot_figure=True):
+    """
+    Plot the maximum drawdown of the portfolios.
+    """
+
+    df = pd.DataFrame(results)
+    
+    # Convert and set date index
+    df["Date"] = pd.to_datetime(df["Date"], format="%m/%Y")  # adjust format if needed
+    df.set_index("Date", inplace=True)
+
+    # Plot styling
+    sns.set(style="whitegrid", context="talk")
+    if plot_figure: plt.figure(figsize=(14, 7))
+    palette = sns.color_palette("tab10", n_colors=len(df.columns))
+
+    for i, col in enumerate(df.columns):
+        plt.plot(df.index, -df[col], label=col, linewidth=2, color=palette[i])
+
+    plt.xlabel("Date")
+    plt.ylabel("Max Drawdown (%)")
+    plt.title(f"Max Drawdown since last max", fontsize=16, fontweight='bold')
+
+    plt.legend(loc="lower left", fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.xticks(rotation=45)
+
+    # Improve date formatting
+    ax = plt.gca()
+    ax.xaxis.set_major_formatter(DateFormatter('%Y'))
+
+    plt.tight_layout()
