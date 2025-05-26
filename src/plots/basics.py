@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.dates import DateFormatter
 
+from src.utils.basics import compute_geometric_mean
+
 def plot_percentage_returns(data, start_date=None, end_date=None):
     # Convert 'Date' column to datetime
     data['Date'] = pd.to_datetime(data['Date'], format="%m/%Y")
@@ -112,3 +114,39 @@ def plot_max_drawdown(results, plot_figure=True):
     ax.xaxis.set_major_formatter(DateFormatter('%Y'))
 
     plt.tight_layout()
+
+def plot_returns_histogram(results, years=20, plot_figure=True):
+    """
+    Plot the maximum drawdown of the portfolios.
+    """
+    df = pd.DataFrame(results)
+    
+    # Compute and display geometric means
+    geometric_means = compute_geometric_mean(df)
+    portfolio_columns = [col for col in df.columns if col != 'Date']
+    q5 = df[portfolio_columns].quantile(0.05)
+
+    # Plot styling
+    sns.set(style="whitegrid", context="talk")
+    if plot_figure: plt.figure(figsize=(14, 7))
+    palette = sns.color_palette("tab10", n_colors=len(df.columns[1:]))
+
+    for i, col in enumerate(df.columns[1:]):
+        plt.hist(df[col], histtype='stepfilled', bins=20, alpha=0.2, color=palette[i], label=col)
+        plt.hist(df[col], histtype='step', bins=20, alpha=1, color=palette[i])
+        plt.axvline(geometric_means[col], color=palette[i], linestyle='-.', linewidth=2)
+        plt.axvline(q5[col], color=palette[i], linestyle='--', linewidth=2)
+
+    plt.xlabel("Annualized Return")
+    plt.ylabel("Frequency")
+    plt.title(f"Annualized Returns of {years} years rolling windows", fontsize=16, fontweight='bold')
+
+    # Improve date formatting
+    ax = plt.gca()
+
+    plt.legend(loc="upper left", fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+
+
