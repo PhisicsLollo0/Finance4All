@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 from src import (
     load_portfolio,
     prune_data_portfolio,
@@ -272,6 +273,11 @@ def main():
     st.subheader(f"Returns Histogram for {years} Years")
     fig_hist = plot_returns_histogram_streamlit(final_results, years=years)
     st.pyplot(fig_hist)
+
+    with st.sidebar.container():
+        logo_path = Path(__file__).parent.parent / "logo.png"
+        st.image(logo_path, use_container_width=True)
+
 
 if __name__ == "__main__":
     main()
