@@ -106,7 +106,7 @@ def plot_annualized_returns_streamlit(results, years=None):
         x="Date",
         y="Annualized Return",
         color="Portfolio",
-        title=f"Annualized Returns of {years} years rolling windows",
+        title=" ",
         labels={"Annualized Return": "Annualized Return (%)"},
         template="simple_white"
     )
@@ -114,7 +114,7 @@ def plot_annualized_returns_streamlit(results, years=None):
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=0.92,
+            y=1.05,
             xanchor="center",
             x=0.5
         )

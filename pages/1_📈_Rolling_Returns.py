@@ -24,6 +24,14 @@ PORTOFOLIO_NAMES = {
     '80_20_World'   : '80% Stocks(World) + 20% Bonds',
 }
 
+PORTFOLIO_DESCRIPTIONS = {
+    '100_2factors'  : 'This portfolio invests 100% in stocks, focusing on small-cap value and momentum strategies.',
+    '80_20_2factors': 'This portfolio allocates 80% to stocks and 20% to bonds, incorporating small-cap value and momentum factors.',
+    '80_20_1factor' : 'This portfolio invests 80% in stocks and 20% in bonds, focusing on small-cap value.',
+    '80_20_ACWI'    : 'This portfolio invests 80% in global stocks (ACWI) and 20% in bonds.',
+    '80_20_World'   : 'This portfolio invests 80% in world stocks and 20% in bonds.'
+}
+
 def load_and_process_portfolios(portfolio_names, years):
     final_results = None
     for name in portfolio_names:
@@ -87,11 +95,12 @@ def render_tooltip():
 
 def main():
 
+    st.set_page_config(layout="wide")
     st.title("Portfolios Rolling Returns Analysis")
 
     # User input
-    col1, col2, col3 = st.columns([8, 2.5, 4.5])
-    with col2:
+    col1, col2, col3, col4 = st.columns([5, 5, 3, 2])
+    with col3:
         st.markdown("### Investment Horizon", unsafe_allow_html=True)
         years = st.selectbox(label="Size of the rolling windows",
                                 options=[5, 10, 20, 25],
@@ -102,13 +111,29 @@ def main():
         st.markdown("### Select Portfolios")
         if "selected_portfolios" not in st.session_state:
             st.session_state.selected_portfolios = [PORTFOLIOS[0], PORTFOLIOS[1]]
-
         selected = []
         for p in PORTFOLIOS:
             checked = p in st.session_state.selected_portfolios
-            # Make the entire box clickable by using Streamlit's checkbox as the main control
-            if st.checkbox(PORTOFOLIO_NAMES[p], value=checked, key=f"portfolio_checkbox_{p}"):
-                selected.append(p)
+            cols = st.columns([10, 1])
+            with cols[0]:
+                if st.checkbox(PORTOFOLIO_NAMES[p], value=checked, key=f"portfolio_checkbox_{p}"):
+                    selected.append(p)
+            with cols[1]:
+                # Add an info icon with a tooltip/description
+                st.markdown(
+                    f"""
+                    <span style="vertical-align:middle;">
+                    <span title="{PORTFOLIO_DESCRIPTIONS[p]}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#007BFF" viewBox="0 0 16 16" style="margin-left:4px;cursor:pointer;">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm0-1A7 7 0 1 1 8 1a7 7 0 0 1 0 14z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 .876-.252 1.02-.598l.088-.416c.066-.292.197-.356.49-.291l.088.02.082-.381-.45-.083c-.294-.07-.35-.176-.288-.47l.738-3.468c.194-.897-.106-1.318-.808-1.318-.545 0-.876.252-1.02.598l-.088.416c-.066.292-.198.356-.49.291z"/>
+                        <circle cx="8" cy="4.5" r="1"/>
+                        </svg>
+                    </span>
+                    </span>
+                    """,
+                    unsafe_allow_html=True
+                )
 
     st.session_state.selected_portfolios = selected
     selected_portfolios = st.session_state.selected_portfolios
@@ -120,7 +145,7 @@ def main():
     final_results = load_and_process_portfolios(selected_portfolios, years)
 
 
-    st.markdown("### Annualized Returns")
+    st.markdown(f"### Annualized Returns for {years} Years Rolling Window")
     cols = st.columns([2, 8])
     with cols[0]:
         with st.expander("ℹ️ What does this mean?"):
