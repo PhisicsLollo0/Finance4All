@@ -14,7 +14,14 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-INDEXES_DIR = os.getenv("INDEXES_DIR")
+INDEXES_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    'data', 'indexes'
+)
+DATA_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    'data'
+)
 
 now = datetime.now()
 current_date = now.strftime("%Y/%m")
@@ -94,6 +101,7 @@ def download_data_updated():
 def get_data_updated_2025(end_date = current_date):
     files = glob(INDEXES_DIR + "/*")  # Get all CSV files in the directory
 
+    print(files)
     # Generate full date range from 1980 to 2025
     dates = pd.date_range(start="1975-01", end=end_date, freq="MS").strftime("%m/%Y").to_numpy()
     df = pd.DataFrame({'Date': dates})  # Initialize DataFrame with all dates
@@ -110,5 +118,5 @@ def get_data_updated_2025(end_date = current_date):
     df = df[cols]
 
     # Save the final dataset
-    df.to_csv('data/Historical_data_updated.csv', index=False)
+    df.to_csv(f'{DATA_DIR}/Historical_data_updated.csv', index=False)
     return df
