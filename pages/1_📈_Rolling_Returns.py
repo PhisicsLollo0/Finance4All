@@ -6,7 +6,7 @@ from src import (
     compute_portfolio_returns_combined,
     merge_results,
     plot_annualized_returns_streamlit,
-    plot_returns_histogram_streamlit
+    plot_return_distributions_streamlit
 )
 
 PORTFOLIOS = [
@@ -261,7 +261,7 @@ def main():
 
 
     st.markdown(f"### Annualized Returns for {years} Years Rolling Window")
-    cols = st.columns([2, 8])
+    cols = st.columns([8, 8])
     with cols[0]:
         with st.expander("ℹ️ What does this mean?"):
             st.markdown("""
@@ -269,10 +269,17 @@ def main():
             """)
     fig_annualized = plot_annualized_returns_streamlit(final_results, years=years)
     st.plotly_chart(fig_annualized, use_container_width=True)
-
-    st.subheader(f"Returns Histogram for {years} Years")
-    fig_hist = plot_returns_histogram_streamlit(final_results, years=years)
-    st.pyplot(fig_hist)
+    
+    st.markdown(f"### Distribution of Annualized Returns for {years} Years Rolling Window")
+    cols = st.columns([8, 8])
+    with cols[0]:
+        with st.expander("ℹ️ What does this mean?"):
+            st.markdown("""
+            The distribution of annualized returns shows how the returns of each portfolio are distributed. It helps identify the range of returns, the average return, and the variability of returns across different portfolios. The plots reports the median return and the 5th percentile return for each portfolio, which can help you understand the risk and potential downside of each strategy.
+            The 5th percentile return shows the lower end of the distribution, and practically indicates how the 5% of worst performing scenarios look like for each portfolio.
+            """)
+    fig_distributions = plot_return_distributions_streamlit(final_results)
+    st.plotly_chart(fig_distributions, use_container_width=True)
 
     with st.sidebar.container():
         logo_path = Path(__file__).parent.parent / "logo.png"
