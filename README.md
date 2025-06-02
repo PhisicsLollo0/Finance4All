@@ -3,6 +3,15 @@
 
 Finance4All is a Python-based toolkit for analyzing, backtesting, and visualizing financial portfolios. It provides tools for scraping historical price data, computing portfolio returns, evaluating risk metrics, and generating insightful plots.
 
+## 🔗 Live Demo
+
+Try the interactive Streamlit app here: [finance4all.streamlit.app](https://finance4all.streamlit.app/)
+
+The app provides a simple interface to explore portfolio analytics:
+
+- **Home:** Overview of the project, purpose, and key features. A starting point to understand what Finance4All offers.
+- **Rolling Returns:** Interactive visualization of rolling return metrics across portfolios. Select different portfolios, time windows, and periods to explore return trends over time.
+
 ## Features
 
 - **Data Scraping:** Download and update historical price data for various assets.
