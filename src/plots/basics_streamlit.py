@@ -22,7 +22,6 @@ DEFAULT_LAYOUT = {
     "template": "simple_white",
     "width": 1200,
     "height": 800,
-    "yaxis_tickformat": ".1%",
     "legend_title": "Portfolio",
     "title_font_size": 25,
     "title_font_family": "Arial",
@@ -41,6 +40,9 @@ DEFAULT_LAYOUT = {
         title_font=dict(size=22, color="black", family="Arial"),
         tickfont=dict(size=16, color="black"),
         linecolor="black",
+        tickformat=".1f",           # Show one decimal
+        tickprefix="",              # No prefix needed; suffix adds %
+        ticksuffix="%",            # ✅ Add percent sign without multiplying
         linewidth=2,
         showgrid=True,
         gridcolor="lightgray",
@@ -48,7 +50,6 @@ DEFAULT_LAYOUT = {
     ),
     "font": dict(color="black")
 }
-
 
 def plot_percentage_returns_streamlit(data, start_date=None, end_date=None):
     """
@@ -86,23 +87,22 @@ def plot_percentage_returns_streamlit(data, start_date=None, end_date=None):
 def plot_annualized_returns_streamlit(results, years=None):
     """
     Plots the annualized returns of indices over time interactively using Plotly and Seaborn style.
-    
+
     Parameters:
         results (dict or DataFrame): The results data containing 'Date' and portfolio return columns.
         years (int, optional): Number of years used for rolling window annotation.
-        width (int): Width of the plot in pixels.
-        height (int): Height of the plot in pixels.
     """
     df = pd.DataFrame(results)
     df["Date"] = pd.to_datetime(df["Date"], format="%m/%Y")
     df.set_index("Date", inplace=True)
 
-    # Seaborn style for consistency
     sns.set(style="whitegrid", context="talk")
 
-    # Melt for Plotly
     df_reset = df.reset_index()
     df_melt = df_reset.melt(id_vars="Date", var_name="Portfolio", value_name="Annualized Return")
+
+    # Multiply by 100 to convert to percentage
+    df_melt["Annualized Return"] *= 100
 
     fig = px.line(
         df_melt,
@@ -110,9 +110,9 @@ def plot_annualized_returns_streamlit(results, years=None):
         y="Annualized Return",
         color="Portfolio",
         title=" ",
-        labels={"Annualized Return": "Annualized Return (%)"},
         template="simple_white"
     )
+
     fig.update_layout(
         legend=dict(
             orientation="h",
@@ -122,7 +122,17 @@ def plot_annualized_returns_streamlit(results, years=None):
             x=0.5
         )
     )
-    fig.update_traces(mode="lines", line=dict(width=2))
+    
+    # ✨ Custom hover menu
+    fig.update_traces(
+        mode="lines",
+        hovertemplate=(
+            "<b>%{fullData.name}</b><br>" +
+            "Date: %{x|%b %Y}<br>" +  # Changed to show Month Year
+            "Annualized Return: %{y:.2f}%<extra></extra>"
+        )
+    )
+
     fig.update_layout(**DEFAULT_LAYOUT)
 
     return fig
