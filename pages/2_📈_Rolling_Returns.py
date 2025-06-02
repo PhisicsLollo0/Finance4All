@@ -270,6 +270,8 @@ def main():
     fig_annualized = plot_annualized_returns_streamlit(final_results, years=years)
     st.plotly_chart(fig_annualized, use_container_width=True)
     
+    st.divider()
+    
     st.markdown(f"### Distribution of Annualized Returns for {years} Years Rolling Window")
     cols = st.columns([8, 8])
     with cols[0]:
