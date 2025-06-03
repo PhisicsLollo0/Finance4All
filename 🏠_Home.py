@@ -2,30 +2,18 @@ import streamlit as st
 from pathlib import Path
 import base64
 
+from src.utils.stramlit_basics import deploy_sidebar_menu, deploy_footer
+
 # Set page config
 st.set_page_config(
-    page_title="Finance4All – Home",
-    page_icon="🏠",
+    page_title="Finance4All – Passive Investing",
+    page_icon="🛌",
     menu_items=None,
     layout="centered",
 )
 
-# === Sidebar logo ===
-with st.sidebar.container():
-    logo_path = Path(__file__).parent / "logo.png"
-    if logo_path.exists():
-          st.image(logo_path, use_container_width=True)
-
-# Clickable links to different pages
-st.sidebar.page_link("🏠_Home.py", label="🏠 Home")
-st.sidebar.markdown("### 📚 How To Pages")
-st.sidebar.page_link("pages/1_🛌_Passive_Investing.py", label="🛌 Passive Investing")
-
-# Separator
-st.sidebar.markdown("---")
-st.sidebar.markdown("### Simulation & Analysis")
-st.sidebar.page_link("pages/2_📈_Rolling_Returns.py", label="📈 Rolling Returns")
-
+# === Sidebar ===
+deploy_sidebar_menu()
 
 # === Main content ===
 # Main page logo (if exists)
@@ -101,5 +89,4 @@ with st.expander("📁 Project Structure"):
     """, language="text")
 
 # Footer
-st.markdown("---")
-st.caption("© 2025 Finance4All – MIT License | Built with ❤️ using Streamlit")
+deploy_footer()

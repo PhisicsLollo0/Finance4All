@@ -9,9 +9,12 @@ from src import (
     plot_return_distributions_streamlit
 )
 
+from src.utils.stramlit_basics import deploy_sidebar_menu, deploy_footer
+
 PORTFOLIOS = [
     '100_2factors',
     '80_20_2factors',
+    '100_1factor',
     '80_20_1factor',
     '80_20_ACWI',
     '80_20_World'
@@ -20,6 +23,7 @@ PORTFOLIOS = [
 PORTOFOLIO_NAMES = {
     '100_2factors'  : '100% Stocks + SmallCap Value + Momentum',
     '80_20_2factors': '80% Stocks + 20% Bonds + SmallCap Value + Momentum',
+    '100_1factor'   : '100% Stocks + SmallCap Value',
     '80_20_1factor' : '80% Stocks + 20% Bonds + SmallCap Value',
     '80_20_ACWI'    : '80% Stocks(ACWI) + 20% Bonds',
     '80_20_World'   : '80% Stocks(World) + 20% Bonds',
@@ -28,6 +32,7 @@ PORTOFOLIO_NAMES = {
 PORTFOLIO_DESCRIPTIONS = {
     '100_2factors'  : 'This portfolio invests 100% in stocks, focusing on small-cap value and momentum strategies.',
     '80_20_2factors': 'This portfolio allocates 80% to stocks and 20% to bonds, incorporating small-cap value and momentum factors.',
+    '100_1factor'   : 'This portfolio invests 100% in stocks, focusing on small-cap value.',
     '80_20_1factor' : 'This portfolio invests 80% in stocks and 20% in bonds, focusing on small-cap value.',
     '80_20_ACWI'    : 'This portfolio invests 80% in global stocks (ACWI) and 20% in bonds.',
     '80_20_World'   : 'This portfolio invests 80% in world stocks and 20% in bonds.'
@@ -131,7 +136,10 @@ def main():
     st.set_page_config(
         layout="wide", 
         menu_items=None,)
-    
+
+    # === Sidebar ===    
+    deploy_sidebar_menu()
+
     st.title("Portfolios Rolling Returns Analysis")
 
     # User input
@@ -286,10 +294,7 @@ def main():
     fig_distributions = plot_return_distributions_streamlit(final_results)
     st.plotly_chart(fig_distributions, use_container_width=True)
 
-    with st.sidebar.container():
-        logo_path = Path(__file__).parent.parent / "logo.png"
-        st.image(logo_path, use_container_width=True)
-
-
+    deploy_footer()
+    
 if __name__ == "__main__":
     main()
