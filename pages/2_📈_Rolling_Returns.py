@@ -128,7 +128,10 @@ def render_tooltip():
     st.markdown(tooltip_html, unsafe_allow_html=True)
 
 def main():
-    st.set_page_config(layout="wide")
+    st.set_page_config(
+        layout="wide", 
+        menu_items=None,)
+    
     st.title("Portfolios Rolling Returns Analysis")
 
     # User input

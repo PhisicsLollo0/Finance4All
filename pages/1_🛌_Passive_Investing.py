@@ -5,7 +5,8 @@ from pathlib import Path
 st.set_page_config(
     page_title="Finance4All – Home",
     page_icon="💰",
-    layout="wide"
+    layout="wide",
+    menu_items=None,
 )
 
 # === Sidebar logo ===
