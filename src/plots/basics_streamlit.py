@@ -143,8 +143,8 @@ def plot_return_distributions_streamlit(df):
     with custom median and 5th percentile lines using Plotly and matplotlib colors.
     """
     def _prepare_data(df):
-        returns_df = df.drop(columns='Date', errors='ignore').dropna(how='all')
-        long_df = returns_df.melt(var_name='Portfolio', value_name='Return').dropna()
+        returns_df = df.dropna(how='all')
+        long_df = returns_df.melt(id_vars='Date', var_name='Portfolio', value_name='Return').dropna()
         return long_df
 
     def _get_colors(portfolios):
@@ -251,7 +251,7 @@ def plot_return_distributions_streamlit(df):
             title="Annualized Return (%)",
             title_font=dict(size=22, color="black", family="Arial"),
             tickfont=dict(size=16, color="black"),
-            tickformat=".0%",
+            tickformat=".1%",
             linecolor="black",
             linewidth=2,
             showgrid=True,
@@ -269,8 +269,13 @@ def plot_return_distributions_streamlit(df):
             categoryarray=category_order
         )
     )
+        # Customize hover template for each trace
+    fig.update_traces(
+        hoveron = 'points'
+        )
 
     return fig
+
 
 
 def plot_max_drawdown(results):

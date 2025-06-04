@@ -13,8 +13,8 @@ from src.utils.stramlit_basics import deploy_sidebar_menu, deploy_footer
 
 PORTFOLIOS = [
     '100_2factors',
-    '80_20_2factors',
     '100_1factor',
+    '80_20_2factors',
     '80_20_1factor',
     '80_20_ACWI',
     '80_20_World'
@@ -22,8 +22,8 @@ PORTFOLIOS = [
 
 PORTOFOLIO_NAMES = {
     '100_2factors'  : '100% Stocks + SmallCap Value + Momentum',
-    '80_20_2factors': '80% Stocks + 20% Bonds + SmallCap Value + Momentum',
     '100_1factor'   : '100% Stocks + SmallCap Value',
+    '80_20_2factors': '80% Stocks + 20% Bonds + SmallCap Value + Momentum',
     '80_20_1factor' : '80% Stocks + 20% Bonds + SmallCap Value',
     '80_20_ACWI'    : '80% Stocks(ACWI) + 20% Bonds',
     '80_20_World'   : '80% Stocks(World) + 20% Bonds',
@@ -31,8 +31,8 @@ PORTOFOLIO_NAMES = {
 
 PORTFOLIO_DESCRIPTIONS = {
     '100_2factors'  : 'This portfolio invests 100% in stocks, focusing on small-cap value and momentum strategies.',
-    '80_20_2factors': 'This portfolio allocates 80% to stocks and 20% to bonds, incorporating small-cap value and momentum factors.',
     '100_1factor'   : 'This portfolio invests 100% in stocks, focusing on small-cap value.',
+    '80_20_2factors': 'This portfolio allocates 80% to stocks and 20% to bonds, incorporating small-cap value and momentum factors.',
     '80_20_1factor' : 'This portfolio invests 80% in stocks and 20% in bonds, focusing on small-cap value.',
     '80_20_ACWI'    : 'This portfolio invests 80% in global stocks (ACWI) and 20% in bonds.',
     '80_20_World'   : 'This portfolio invests 80% in world stocks and 20% in bonds.'
@@ -147,7 +147,7 @@ def main():
     with col3:
         st.markdown("### Investment Horizon", unsafe_allow_html=True)
         years = st.selectbox(label="Size of the rolling windows",
-                                options=[5, 10, 20, 25],
+                                options=[5, 10, 15, 20, 25],
                                 index=2, 
                                 help="Select the size of the rolling window for annualized returns calculation. Select the number of years similar to the investment horizon you want to analyze.")
 
@@ -165,7 +165,7 @@ def main():
                     key="select_all_toggle"
                 )
 
-            default_selection = [PORTFOLIOS[0], PORTFOLIOS[1]]
+            default_selection = [PORTFOLIOS[0], PORTFOLIOS[2]]
 
             if "selected_portfolios" not in st.session_state:
                 st.session_state.selected_portfolios = default_selection.copy()
