@@ -137,6 +137,59 @@ def plot_annualized_returns_streamlit(results, years=None):
 
     return fig
 
+def plot_total_returns_streamlit(results, years=None):
+    """
+    Plots the total returns of indices over time interactively using Plotly and Seaborn style.
+
+    Parameters:
+        results (dict or DataFrame): The results data containing 'Date' and portfolio return columns.
+        years (int, optional): Number of years used for rolling window annotation.
+    """
+    df = pd.DataFrame(results)
+    df["Date"] = pd.to_datetime(df["Date"], format="%m/%Y")
+    df.set_index("Date", inplace=True)
+
+    sns.set(style="whitegrid", context="talk")
+
+    df_reset = df.reset_index()
+    df_melt = df_reset.melt(id_vars="Date", var_name="Portfolio", value_name="Total Return")
+
+    # Multiply by 100 to convert to percentage
+    df_melt["Total Return"] *= 100
+
+    fig = px.line(
+        df_melt,
+        x="Date",
+        y="Total Return",
+        color="Portfolio",
+        title=" ",
+        template="simple_white"
+    )
+
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.05,
+            xanchor="center",
+            x=0.5
+        )
+    )
+    
+    # ✨ Custom hover menu
+    fig.update_traces(
+        mode="lines",
+        hovertemplate=(
+            "<b>%{fullData.name}</b><br>" +
+            "Date: %{x|%b %Y}<br>" +  # Changed to show Month Year
+            "Total Return: %{y:.2f}%<extra></extra>"
+        )
+    )
+
+    fig.update_layout(**DEFAULT_LAYOUT)
+
+    return fig
+
 def plot_return_distributions_streamlit(df):
     """
     Create an interactive violin plot showing portfolio return distributions,
@@ -275,6 +328,7 @@ def plot_return_distributions_streamlit(df):
         )
 
     return fig
+
 
 
 
