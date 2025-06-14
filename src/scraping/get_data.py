@@ -93,6 +93,7 @@ def download_data_updated():
                             ('S&P_500.csv'                                      , 'https://curvo.eu/backtest/en/market-index/sp-500?currency=eur'),
                             ('MSCI_USA_Small_Cap_Value_Weighted.csv'            , 'https://curvo.eu/backtest/en/market-index/msci-usa-small-cap-value-weighted?currency=eur'),
                             ('MSCI_World_Momentum.csv'                          , 'https://curvo.eu/backtest/en/market-index/msci-world-momentum?currency=eur'),
+                            ('MSCI_World_Quality.csv'                           , 'https://curvo.eu/backtest/en/market-index/msci-world-sector-neutral-quality?currency=eur'),
                             ]
 
     start_up_scraping(dict_indexes_on_curvo)

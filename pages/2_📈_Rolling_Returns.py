@@ -52,7 +52,13 @@ with col3:
                             options=[5, 10, 15, 20, 25],
                             index=2, 
                             help="Select the size of the rolling window for annualized returns calculation. Select the number of years similar to the investment horizon you want to analyze.")
-
+    st.markdown("### Total or Annualized Returns", unsafe_allow_html=True)
+    total_or_annualized = st.toggle(
+        "Annualized Returns",
+        value=True,
+        key="total_or_annualized_toggle",
+        help="Select whether to display total returns or annualized returns. Total returns show the overall performance, while annualized returns provide a yearly average performance over the specified period."
+    )
 with col1:
     # Put the whole portfolio selection UI in a box
     with st.container(border=True):
@@ -171,41 +177,58 @@ if not selected_portfolios:
 
 final_results, final_results_totalreturn = load_and_process_portfolios(selected_portfolios, years)
 
+if total_or_annualized == True:
 
-st.markdown(f"### Annualized Returns for {years} Years Rolling Window")
-cols = st.columns([8, 8])
-with cols[0]:
-    with st.expander("ℹ️ What does this mean?"):
-        st.markdown("""
-        The annualized return is the average return per year over a specified period, adjusted for compounding. It provides a standardized way to compare the performance of different investments over time.
-        """)
-fig_annualized = plot_annualized_returns_streamlit(final_results, years=years)
-st.plotly_chart(fig_annualized, use_container_width=True)
+    st.markdown(f"### Annualized Returns for {years} Years Rolling Window")
+    cols = st.columns([8, 8])
+    with cols[0]:
+        with st.expander("ℹ️ What does this mean?"):
+            st.markdown("""
+            The annualized return is the average return per year over a specified period, adjusted for compounding. It provides a standardized way to compare the performance of different investments over time.
+            """)
+
+    fig_annualized = plot_annualized_returns_streamlit(final_results, years=years)
+    st.plotly_chart(fig_annualized, use_container_width=True)
+
+else:
+
+    st.markdown(f"### Total Returns for {years} Years Rolling Window")
+    cols = st.columns([8, 8])
+    with cols[0]:
+        with st.expander("ℹ️ What does this mean?"):
+            st.markdown("""
+            sss        """)
+    fig_total= plot_total_returns_streamlit(final_results_totalreturn, years=years)
+    st.plotly_chart(fig_total, use_container_width=True)
+
 
 st.divider()
 
-st.markdown(f"### Distribution of Annualized Returns for {years} Years Rolling Window")
-cols = st.columns([8, 8])
-with cols[0]:
-    with st.expander("ℹ️ What does this mean?"):
-        st.markdown("""
-        The distribution of annualized returns shows how the returns of each portfolio are distributed. It helps identify the range of returns, the average return, and the variability of returns across different portfolios. The plots reports the median return and the 5th percentile return for each portfolio, which can help you understand the risk and potential downside of each strategy.
-        The 5th percentile return shows the lower end of the distribution, and practically indicates how the 5% of worst performing scenarios look like for each portfolio.
-        """)
-fig_distributions = plot_return_distributions_streamlit(final_results)
-st.plotly_chart(fig_distributions, use_container_width=True)
+if total_or_annualized == True:
 
-st.divider()
+    st.markdown(f"### Distribution of Annualized Returns for {years} Years Rolling Window")
+    cols = st.columns([8, 8])
+    with cols[0]:
+        with st.expander("ℹ️ What does this mean?"):
+            st.markdown("""
+            The distribution of annualized returns shows how the returns of each portfolio are distributed. It helps identify the range of returns, the average return, and the variability of returns across different portfolios. The plots reports the median return and the 5th percentile return for each portfolio, which can help you understand the risk and potential downside of each strategy.
+            The 5th percentile return shows the lower end of the distribution, and practically indicates how the 5% of worst performing scenarios look like for each portfolio.
+            """)
+    fig_distributions = plot_return_distributions_streamlit(final_results)
+    st.plotly_chart(fig_distributions, use_container_width=True)
 
-st.markdown(f"### Total Returns for {years} Years Rolling Window")
-cols = st.columns([8, 8])
-with cols[0]:
-    with st.expander("ℹ️ What does this mean?"):
-        st.markdown("""
-        sss        """)
-fig_total= plot_total_returns_streamlit(final_results_totalreturn, years=years)
-st.plotly_chart(fig_total, use_container_width=True)
+else:
 
+    st.markdown(f"### Distribution of Total Returns for {years} Years Rolling Window")
+    cols = st.columns([8, 8])
+    with cols[0]:
+        with st.expander("ℹ️ What does this mean?"):
+            st.markdown("""
+            The distribution of total returns shows how the returns of each portfolio are distributed. It helps identify the range of returns, the average return, and the variability of returns across different portfolios. The plots reports the median return and the 5th percentile return for each portfolio, which can help you understand the risk and potential downside of each strategy.
+            The 5th percentile return shows the lower end of the distribution, and practically indicates how the 5% of worst performing scenarios look like for each portfolio.
+            """)
+    fig_distributions = plot_return_distributions_streamlit(final_results_totalreturn)
+    st.plotly_chart(fig_distributions, use_container_width=True)
 
 
 deploy_footer()
