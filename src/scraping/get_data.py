@@ -100,6 +100,8 @@ def download_data_updated():
 
 
 def get_data_updated_2025(end_date = current_date):
+    print(f"Current date: {current_date}")
+
     files = glob(INDEXES_DIR + "/*")  # Get all CSV files in the directory
 
     # Generate full date range from 1980 to 2025
