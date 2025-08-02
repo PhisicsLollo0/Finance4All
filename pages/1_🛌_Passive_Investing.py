@@ -7,7 +7,7 @@ from src.utils.stramlit_basics import deploy_sidebar_menu, deploy_footer
 st.set_page_config(
     page_title="Finance4All – Passive Investing Guide",
     page_icon="💰",
-    layout="wide"
+    # layout="wide"
 )
 
 # === Sidebar ===
@@ -16,71 +16,111 @@ deploy_sidebar_menu()
 # === Main Content ===
 st.title("💰 Passive Investing: A Practical Guide")
 
-st.markdown("""
-Passive investing is an investment strategy aimed at maximizing returns by minimizing buying and selling activities. It typically involves investing in index funds or ETFs.
+st.markdown(""" 
+**Passive investing**, much like quantum mechanics, is built upon foundational axioms—assumptions you accept to navigate the landscape ahead. You don’t necessarily have to agree completely, but to invest passively, you accept (at least tentatively) these core beliefs:
 
-### Benefits of Passive Investing:
-- Lower costs
-- Reduced risk through diversification
-- Simplicity and transparency
-- Long-term wealth accumulation
+1. **Markets are efficient 🏦✨**  
+   Prices are _always_ correct and incorporate all available information. This means we don’t have any special edge over the market: trying to beat it through analysis or prediction is (mostly) futile, since any new information is almost instantly reflected in stock prices.
+
+2. **Long-term growth 📈🌱**  
+   Over time, human innovation, productivity, and the drive to create value have led to steady economic progress. This ongoing creation of wealth is reflected in market prices, which—despite short-term swings—tend to grow over the long run. 
+
+These two principles form the bedrock of passive investing. If you do not accept them, your journey into passive investing may finish here. However, read the next few lines and give me a chance to convince you.
 
 ---
+       
+### “Markets are efficient” 🏦✨
+
+#### Historical Data
+Decades of academic research—including landmark studies like the SPIVA® (S&P Indices Versus Active) reports—consistently reveal that the vast majority of actively managed funds fail to beat their benchmark indexes over time, especially after accounting for fees and taxes. Even professional investors with deep resources and expertise struggle to outperform a simple index-tracking strategy. This body of evidence supports the idea that market efficiency makes it extremely difficult to achieve better-than-market returns through stock picking or market timing.
+
+#### Who Are You Really Competing With?
+When you try to beat the market through stock picking or market timing, you’re not just playing a friendly game against casual investors. You are, in fact, competing against some of the world’s largest investment funds and professional institutions—organizations that employ thousands of highly skilled analysts, leverage billions of dollars in research budgets, and operate with cutting-edge technology and privileged access to information.
+Beating the market is not their hobby; it’s their full-time job. These institutions dedicate immense resources to finding the smallest market inefficiencies, often acting on new information in seconds. So, before trusting in a single “brilliant” idea or your unique read of a geopolitical event, it’s worth asking: _Are you confident you can outsmart teams whose sole mission is to outperform everyone else—including you?_
+            
+---
+
+### For “Long-term growth” 📈🌱
+Human history is fundamentally a story of **progress**. From the dawn of civilization, people have continuously strived to improve their condition—*inventing new tools, creating better systems, and overcoming countless challenges* along the way. While this path has not always been smooth—periods of stagnation and setbacks are part of our journey—the long-term trend has been one of remarkable advancement.
+
+In the past century especially, we have witnessed an acceleration of growth unlike anything before. ⚡️ Breakthroughs in science, technology, and organization have led to unprecedented leaps in *productivity, efficiency, and overall value creation*. This steady process of innovation is not just a pattern from the past, but a core belief for the future: **humans will keep finding new ways to solve problems, increase productivity, and generate new wealth.**
+
+As a result, the value created by this ongoing progress is ultimately reflected in rising market prices 📈. This is the foundation of the long-term growth axiom in passive investing. Of course, it’s possible that innovation could slow down—or even stop entirely—one day. But *all historical evidence* suggests that the tendency for humans to upgrade themselves and their societies is a fundamental driver of economic and market growth.
 """)
 
-# === Interactive Example: Impact of Fees on Investments ===
-st.header("💸 Fees Impact Calculator")
+import streamlit as st
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-col1, col2, col3 = st.columns(3)
+# --- your session_state + button/toggle setup ---
+if "selected_annual_return" not in st.session_state:
+    st.session_state.selected_annual_return = 0.07
 
-initial_investment = col1.number_input("Initial Investment ($)", value=10000, step=1000)
-annual_contribution = col2.number_input("Annual Contribution ($)", value=1000, step=500)
-years = col3.slider("Investment Duration (years)", min_value=1, max_value=50, value=30)
+col1, col2, col3, col4 = st.columns([1.2,1.2,2.,1.3])
+with col1:
+    if st.button("Stock Market", key="stock_market"):
+        st.session_state.selected_annual_return = 0.07
+with col2:
+    if st.button("Bonds", key="bonds"):
+        st.session_state.selected_annual_return = 0.03
 
-rate_of_return = st.slider("Estimated Annual Rate of Return (%)", min_value=1.0, max_value=15.0, value=7.0, step=0.1)
-
-fee_classes = {
-    "No Fees (Fiscal Paradise)": 0.0,
-    "Typical ETF (TER ~0.2%)": 0.2,
-    "Pension Fund (TER ~1%)": 1.0,
-    "Managed Funds (TER ~2.5%)": 2.5
+options = {
+    "Fiscal Paradise":   {"key": "fiscal_paradise", "TER": 0.00,  "default": True},
+    "ETF":               {"key": "etf",             "TER": 0.002, "default": False},
+    "Retirement Fund":   {"key": "retirement_fund", "TER": 0.01,  "default": False},
+    "Banca Inculia":     {"key": "banca_inculia",   "TER": 0.02,  "default": False},
+    "Pirats":            {"key": "pirats",          "TER": 0.03,  "default": False}
 }
 
-# Compound interest calculation with fees
-def calculate_investment(initial, annual, rate, fee, years):
-    values = []
-    total = initial
-    for year in range(1, years + 1):
-        total = (total + annual) * (1 + (rate - fee) / 100)
-        values.append(total)
-    return values
+# collect which ones are toggled on
+selected = []
+for label, cfg in options.items():
+    if st.toggle(label, key=cfg["key"], value=cfg["default"]):
+        selected.append((label, cfg["TER"]))
 
-investment_results = {}
-for fee_name, fee_rate in fee_classes.items():
-    investment_results[fee_name] = calculate_investment(initial_investment, annual_contribution, rate_of_return, fee_rate, years)
+with col4:
+    for label, ter in selected:
+        st.markdown(f"**{label}: {ter*100:.2f}% TER**")
 
-df_fees_impact = pd.DataFrame(investment_results, index=range(1, years + 1))
-st.line_chart(df_fees_impact)
+# slider for manual override if you still need it
+col5, col6 = st.columns([1,1])
+with col5:
+    annual_return = st.slider(
+        "Annual Expected Return",
+        min_value=0.02,
+        max_value=0.1,
+        value=st.session_state.selected_annual_return,
+        step=0.01,
+        format="%.2f"
+    )
 
-final_amounts = {key: value[-1] for key, value in investment_results.items()}
-st.markdown("### Investment Outcome After Fees")
-for fee_name, amount in final_amounts.items():
-    st.markdown(f"- **{fee_name}:** ${amount:,.2f}")
+# --- build a combined DataFrame for all selected TERs ---
+years = np.arange(0, 41)
+df_list = []
+for label, ter in selected:
+    # simulate starting at 1, growing at (1 + ter) per year
+    values = (1 + ter) ** years
+    df_list.append(pd.DataFrame({
+        "Year": years,
+        "Value": values,
+        "Option": label
+    }))
 
-# === Example Portfolio ===
-st.header("🗂️ Example Passive Investment Portfolio")
+if df_list:
+    df_all = pd.concat(df_list, ignore_index=True)
 
-portfolio_data = {
-    "Asset": ["S&P 500 ETF", "International ETF", "Bond ETF", "Real Estate ETF"],
-    "Allocation (%)": [50, 20, 20, 10]
-}
-df_portfolio = pd.DataFrame(portfolio_data)
+    # plot
+    fig, ax = plt.subplots()
+    sns.lineplot(data=df_all, x="Year", y="Value", hue="Option", ax=ax)
+    ax.set_title("40‑Year Growth for Selected TERs")
+    ax.set_ylabel("Relative Value (start = 1)")
+    ax.grid(True)
+    st.pyplot(fig)
+else:
+    st.info("Please toggle at least one TER option to see the simulation.")
 
-st.table(df_portfolio)
-
-st.markdown("""
-A diversified portfolio typically includes a balanced allocation across different asset classes to spread risk effectively.
-""")
 
 # Footer
 deploy_footer()

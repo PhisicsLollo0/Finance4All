@@ -12,7 +12,7 @@ from src import (
 
 from src.utils.stramlit_basics import deploy_sidebar_menu, deploy_footer
 
-from src.utils.constants import PORTFOLIOS, PORTOFOLIO_NAMES, PORTFOLIO_DESCRIPTIONS
+from src.utils.constants import PORTFOLIOS, PORTFOLIO_NAMES, PORTFOLIO_DESCRIPTIONS
 from src.utils.constants import SIMPLE_PORTFOLIOS, SIMPLE_PORTFOLIO_NAMES, SIMPLE_PORTFOLIO_DESCRIPTIONS
 from src.utils.constants import ALL_PORTFOLIOS, ALL_PORTFOLIOS_NAMES, ALL_PORTFOLIOS_DESCRIPTIONS
 
@@ -91,7 +91,7 @@ with col1:
             checked = p in selected
             cols = st.columns([10, 1])
             with cols[0]:
-                if st.toggle(PORTOFOLIO_NAMES[p], value=checked, key=f"portfolio_toggle_{p}"):
+                if st.toggle(PORTFOLIO_NAMES[p], value=checked, key=f"portfolio_toggle_{p}"):
                     if p not in selected:
                         selected.append(p)
                 else:
